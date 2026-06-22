@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SiriusX - Agent Catalog</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: #fafafa;
+            color: #1d1d1f;
+        }
+
+        /* 全局导航 */
+        .global-nav {
+            height: 64px;
+            background: white;
+            border-bottom: 1px solid #e5e5e5;
+            display: flex;
+            align-items: center;
+            padding: 0 40px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: #0066cc;
+            text-decoration: none;
+            font-family: Georgia, serif;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 16px;
+            margin-left: 40px;
+        }
+
+        .nav-link {
+            padding: 8px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            color: #666;
+            transition: all 0.2s;
+        }
+
+        .nav-link:hover {
+            background: #f5f5f5;
+        }
+
+        .nav-link.active {
+            background: #0066cc;
+            color: white;
+        }
+
+        /* Hero 区域 */
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 80px 40px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 56px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            font-family: Georgia, serif;
+        }
+
+        .hero p {
+            font-size: 20px;
+            opacity: 0.95;
+        }
+
+        /* Agent 卡片网格 */
+        .container {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 60px 40px;
+        }
+
+        .agent-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 32px;
+        }
+
+        .agent-card {
+            background: white;
+            border-radius: 12px;
+            padding: 32px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .agent-card:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+        }
+
+        .agent-card.light { background: #f8f9fa; }
+        .agent-card.parchment { background: #fef9f3; }
+        .agent-card.dark { background: #2d2d2d; color: white; }
+
+        .agent-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+            transition: transform 0.5s;
+        }
+
+        .agent-card:hover .agent-icon {
+            transform: scale(1.1);
+        }
+
+        .agent-card h3 {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-family: Georgia, serif;
+        }
+
+        .agent-card .subtitle {
+            font-size: 14px;
+            opacity: 0.7;
+            margin-bottom: 16px;
+        }
+
+        .agent-card p {
+            font-size: 15px;
+            line-height: 1.6;
+            margin-bottom: 24px;
+            opacity: 0.85;
+        }
+
+        .select-btn {
+            background: #0066cc;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            width: 100%;
+        }
+
+        .select-btn:hover {
+            background: #0052a3;
+        }
+
+        .agent-card.dark .select-btn {
+            background: white;
+            color: #2d2d2d;
+        }
+
+        /* Footer */
+        .footer {
+            background: #2d2d2d;
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .footer a {
+            color: #0066cc;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- 全局导航 -->
+    <nav class="global-nav">
+        <a href="index.html" class="logo">SiriusX</a>
+        <div class="nav-links">
+            <a href="agent-catalog.html" class="nav-link active">Agents</a>
+            <a href="history.html" class="nav-link">History</a>
+        </div>
+    </nav>
+
+    <!-- Hero 区域 -->
+    <div class="hero">
+        <h1>AI-Powered Development</h1>
+        <p>Distributed AI Agent Task Execution Platform</p>
+    </div>
+
+    <!-- Agent 卡片 -->
+    <div class="container">
+        <div class="agent-grid">
+            <div class="agent-card light">
+                <div class="agent-icon">📦</div>
+                <h3>Architecture Advisor</h3>
+                <p class="subtitle">System Design Expert</p>
+                <p>帮助你设计高可用、可扩展的系统架构方案，提供最佳实践建议和技术选型指导。</p>
+                <button class="select-btn">Select Agent</button>
+            </div>
+
+            <div class="agent-card parchment">
+                <div class="agent-icon">🔍</div>
+                <h3>Code Reviewer</h3>
+                <p class="subtitle">Quality Guardian</p>
+                <p>深度审查代码质量，发现潜在 bug、性能问题和安全漏洞，确保代码符合最佳实践。</p>
+                <button class="select-btn">Select Agent</button>
+            </div>
+
+            <div class="agent-card dark">
+                <div class="agent-icon">🐛</div>
+                <h3>Debug Assistant</h3>
+                <p class="subtitle">Problem Solver</p>
+                <p>快速定位和修复 bug，提供详细的调试步骤和解决方案，支持多种编程语言。</p>
+                <button class="select-btn">Select Agent</button>
+            </div>
+
+            <div class="agent-card light">
+                <div class="agent-icon">🔬</div>
+                <h3>Research Agent</h3>
+                <p class="subtitle">Knowledge Explorer</p>
+                <p>深度研究技术文档、API 规范和开源项目，帮助你快速学习新技术栈。</p>
+                <button class="select-btn">Select Agent</button>
+            </div>
+
+            <div class="agent-card parchment">
+                <div class="agent-icon">✨</div>
+                <h3>Refactor Expert</h3>
+                <p class="subtitle">Code Optimizer</p>
+                <p>重构遗留代码，提升可读性和可维护性，应用现代设计模式和架构原则。</p>
+                <button class="select-btn">Select Agent</button>
+            </div>
+
+            <div class="agent-card dark">
+                <div class="agent-icon">📝</div>
+                <h3>Documentation Writer</h3>
+                <p class="subtitle">Technical Writer</p>
+                <p>生成清晰的技术文档、API 文档和用户指南，确保文档与代码保持同步。</p>
+                <button class="select-btn">Select Agent</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <p>© 2026 SiriusX Platform | <a href="https://github.com">GitHub</a></p>
+    </div>
+</body>
+</html>

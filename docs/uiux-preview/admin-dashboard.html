@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SiriusX Admin - Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: #f5f5f7;
+            color: #1d1d1f;
+        }
+
+        /* 全局导航 */
+        .global-nav {
+            height: 64px;
+            background: #2d2d2d;
+            color: white;
+            display: flex;
+            align-items: center;
+            padding: 0 40px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: white;
+            text-decoration: none;
+            font-family: Georgia, serif;
+        }
+
+        .logo .admin-badge {
+            font-size: 12px;
+            background: #ff9800;
+            padding: 2px 8px;
+            border-radius: 4px;
+            margin-left: 8px;
+            font-family: sans-serif;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 16px;
+            margin-left: 40px;
+            flex: 1;
+        }
+
+        .nav-link {
+            padding: 8px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            color: rgba(255,255,255,0.7);
+            transition: all 0.2s;
+        }
+
+        .nav-link:hover {
+            background: rgba(255,255,255,0.1);
+            color: white;
+        }
+
+        .nav-link.active {
+            background: #0066cc;
+            color: white;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: white;
+        }
+
+        /* 侧边栏 */
+        .layout {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            min-height: calc(100vh - 64px);
+        }
+
+        .sidebar {
+            background: white;
+            border-right: 1px solid #e5e5e5;
+            padding: 24px 0;
+        }
+
+        .sidebar-section {
+            margin-bottom: 32px;
+        }
+
+        .sidebar-title {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: #999;
+            padding: 0 24px;
+            margin-bottom: 12px;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 4px;
+        }
+
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 24px;
+            text-decoration: none;
+            color: #666;
+            transition: all 0.2s;
+        }
+
+        .sidebar-menu a:hover {
+            background: #f5f5f5;
+            color: #1d1d1f;
+        }
+
+        .sidebar-menu a.active {
+            background: #e3f2fd;
+            color: #0066cc;
+            border-right: 3px solid #0066cc;
+        }
+
+        .sidebar-icon {
+            font-size: 20px;
+        }
+
+        /* 主内容区 */
+        .main-content {
+            padding: 40px;
+            max-width: 1400px;
+        }
+
+        .page-header {
+            margin-bottom: 32px;
+        }
+
+        .page-header h1 {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .page-header p {
+            color: #666;
+            font-size: 16px;
+        }
+
+        /* 统计卡片 */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .stat-card .stat-label {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .stat-card .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .stat-card .stat-change {
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .stat-change.positive { color: #4caf50; }
+        .stat-change.negative { color: #f44336; }
+
+        /* 表格 */
+        .section {
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 24px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .section-header h2 {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .filter-btn {
+            padding: 8px 16px;
+            border: 1px solid #e5e5e5;
+            border-radius: 6px;
+            background: white;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: #f5f5f5;
+        }
+
+        th {
+            text-align: left;
+            padding: 12px 16px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #666;
+        }
+
+        td {
+            padding: 14px 16px;
+            border-bottom: 1px solid #f5f5f5;
+            font-size: 14px;
+        }
+
+        tbody tr:hover {
+            background: #fafafa;
+        }
+
+        .badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .badge.running { background: #e3f2fd; color: #1976d2; }
+        .badge.completed { background: #e8f5e9; color: #2e7d32; }
+        .badge.failed { background: #ffebee; color: #c62828; }
+        .badge.active { background: #e8f5e9; color: #2e7d32; }
+        .badge.suspended { background: #fff3e0; color: #f57c00; }
+
+        .action-btn {
+            padding: 6px 12px;
+            border: 1px solid #e5e5e5;
+            border-radius: 4px;
+            background: white;
+            cursor: pointer;
+            font-size: 12px;
+            margin-right: 4px;
+        }
+
+        .action-btn:hover {
+            background: #f5f5f5;
+        }
+
+        /* 图表占位符 */
+        .chart-placeholder {
+            height: 300px;
+            background: linear-gradient(to bottom, #e3f2fd, #f5f5f5);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 全局导航 -->
+    <nav class="global-nav">
+        <a href="index.html" class="logo">
+            SiriusX
+            <span class="admin-badge">ADMIN</span>
+        </a>
+        <div class="nav-links">
+            <a href="admin-dashboard.html" class="nav-link active">Dashboard</a>
+            <a href="admin-users.html" class="nav-link">Users</a>
+            <a href="admin-tasks.html" class="nav-link">Tasks</a>
+            <a href="admin-system.html" class="nav-link">System</a>
+        </div>
+        <div class="user-menu">
+            <span>Admin User</span>
+            <span>👤</span>
+        </div>
+    </nav>
+
+    <!-- 主布局 -->
+    <div class="layout">
+        <!-- 侧边栏 -->
+        <aside class="sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-title">Overview</div>
+                <ul class="sidebar-menu">
+                    <li><a href="#" class="active"><span class="sidebar-icon">📊</span> Dashboard</a></li>
+                    <li><a href="#"><span class="sidebar-icon">📈</span> Analytics</a></li>
+                    <li><a href="#"><span class="sidebar-icon">💰</span> Billing</a></li>
+                </ul>
+            </div>
+            <div class="sidebar-section">
+                <div class="sidebar-title">Management</div>
+                <ul class="sidebar-menu">
+                    <li><a href="admin-users.html"><span class="sidebar-icon">👥</span> Users</a></li>
+                    <li><a href="admin-tasks.html"><span class="sidebar-icon">📝</span> Tasks</a></li>
+                    <li><a href="#"><span class="sidebar-icon">🏢</span> Tenants</a></li>
+                    <li><a href="#"><span class="sidebar-icon">🤖</span> Agents</a></li>
+                </ul>
+            </div>
+            <div class="sidebar-section">
+                <div class="sidebar-title">System</div>
+                <ul class="sidebar-menu">
+                    <li><a href="admin-system.html"><span class="sidebar-icon">⚙️</span> Settings</a></li>
+                    <li><a href="#"><span class="sidebar-icon">🔌</span> Workers</a></li>
+                    <li><a href="#"><span class="sidebar-icon">🗄️</span> Database</a></li>
+                    <li><a href="#"><span class="sidebar-icon">📦</span> Storage</a></li>
+                    <li><a href="#"><span class="sidebar-icon">🔐</span> Security</a></li>
+                </ul>
+            </div>
+        </aside>
+
+        <!-- 主内容 -->
+        <main class="main-content">
+            <div class="page-header">
+                <h1>Dashboard</h1>
+                <p>Platform overview and key metrics</p>
+            </div>
+
+            <!-- 统计卡片 -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Total Users</div>
+                    <div class="stat-value">1,284</div>
+                    <div class="stat-change positive">
+                        ↑ +12.5% from last month
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Active Tasks</div>
+                    <div class="stat-value">347</div>
+                    <div class="stat-change positive">
+                        ↑ +8.3% from last week
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Total Runs (Today)</div>
+                    <div class="stat-value">2,156</div>
+                    <div class="stat-change negative">
+                        ↓ -3.2% from yesterday
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Avg Queue Wait (p95)</div>
+                    <div class="stat-value">42s</div>
+                    <div class="stat-change positive">
+                        ↓ -15s from last hour
+                    </div>
+                </div>
+            </div>
+
+            <!-- 系统状态 -->
+            <div class="section">
+                <div class="section-header">
+                    <h2>System Health</h2>
+                    <button class="filter-btn">Last 24 hours ▼</button>
+                </div>
+                <div class="chart-placeholder">
+                    📊 Real-time metrics chart (Queue length, Worker utilization, API latency)
+                </div>
+            </div>
+
+            <!-- 最近任务 -->
+            <div class="section">
+                <div class="section-header">
+                    <h2>Recent Tasks</h2>
+                    <button class="filter-btn">Filter ▼</button>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Task ID</th>
+                            <th>User</th>
+                            <th>Agent</th>
+                            <th>Status</th>
+                            <th>Created</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>task_abc123</code></td>
+                            <td>morgan@example.com</td>
+                            <td>Architecture Advisor</td>
+                            <td><span class="badge running">Running</span></td>
+                            <td>2 min ago</td>
+                            <td>
+                                <button class="action-btn">View</button>
+                                <button class="action-btn">Cancel</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><code>task_def456</code></td>
+                            <td>alex@example.com</td>
+                            <td>Code Reviewer</td>
+                            <td><span class="badge completed">Completed</span></td>
+                            <td>15 min ago</td>
+                            <td>
+                                <button class="action-btn">View</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><code>task_ghi789</code></td>
+                            <td>sam@example.com</td>
+                            <td>Debug Assistant</td>
+                            <td><span class="badge failed">Failed</span></td>
+                            <td>1 hour ago</td>
+                            <td>
+                                <button class="action-btn">View</button>
+                                <button class="action-btn">Retry</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Worker 状态 -->
+            <div class="section">
+                <div class="section-header">
+                    <h2>Worker Nodes</h2>
+                    <button class="filter-btn">Refresh</button>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Node ID</th>
+                            <th>Status</th>
+                            <th>CPU</th>
+                            <th>Memory</th>
+                            <th>Active Runs</th>
+                            <th>Uptime</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>worker-01</code></td>
+                            <td><span class="badge active">Active</span></td>
+                            <td>45%</td>
+                            <td>3.2 GB / 8 GB</td>
+                            <td>3</td>
+                            <td>12h 34m</td>
+                        </tr>
+                        <tr>
+                            <td><code>worker-02</code></td>
+                            <td><span class="badge active">Active</span></td>
+                            <td>67%</td>
+                            <td>5.1 GB / 8 GB</td>
+                            <td>5</td>
+                            <td>8h 15m</td>
+                        </tr>
+                        <tr>
+                            <td><code>worker-03</code></td>
+                            <td><span class="badge suspended">Suspended</span></td>
+                            <td>0%</td>
+                            <td>0.5 GB / 8 GB</td>
+                            <td>0</td>
+                            <td>2d 5h</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

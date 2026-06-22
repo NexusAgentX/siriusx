@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SiriusX UI/UX 预览</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: #f5f5f7;
+            color: #1d1d1f;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        h1 {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 60px;
+            font-size: 18px;
+        }
+
+        .preview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-top: 40px;
+        }
+
+        .preview-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: all 0.2s;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .preview-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+        }
+
+        .preview-card h2 {
+            font-size: 24px;
+            margin-bottom: 12px;
+            color: #0066cc;
+        }
+
+        .preview-card p {
+            color: #666;
+            font-size: 15px;
+        }
+
+        .preview-card .icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>SiriusX UI/UX 预览</h1>
+        <p class="subtitle">硬编码静态页面预览 - 查看设计效果 ฅ'ω'ฅ</p>
+
+        <div class="preview-grid">
+            <a href="agent-catalog.html" class="preview-card">
+                <span class="icon">🏠</span>
+                <h2>首页 - Agent Catalog</h2>
+                <p>Agent 选择页面，展示可用的 AI Agent 列表</p>
+            </a>
+
+            <a href="task-detail.html" class="preview-card">
+                <span class="icon">💬</span>
+                <h2>任务详情页</h2>
+                <p>对话区、实时流、工具调用、文件树面板</p>
+            </a>
+
+            <a href="history.html" class="preview-card">
+                <span class="icon">📚</span>
+                <h2>历史页</h2>
+                <p>查看所有任务历史，支持搜索和过滤</p>
+            </a>
+
+            <a href="login.html" class="preview-card">
+                <span class="icon">🔐</span>
+                <h2>登录页</h2>
+                <p>Session-based Auth 登录界面</p>
+            </a>
+
+            <a href="design-system.html" class="preview-card">
+                <span class="icon">🎨</span>
+                <h2>设计系统</h2>
+                <p>颜色、字体、组件库展示</p>
+            </a>
+        </div>
+    </div>
+</body>
+</html>

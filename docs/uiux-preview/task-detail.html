@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SiriusX - 任务详情</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; background: #fafafa; color: #1d1d1f; }
+        .global-nav { height: 64px; background: white; border-bottom: 1px solid #e5e5e5; display: flex; align-items: center; padding: 0 40px; position: sticky; top: 0; z-index: 100; }
+        .logo { font-size: 24px; font-weight: 700; color: #0066cc; text-decoration: none; font-family: Georgia, serif; }
+        .topbar { height: 56px; background: white; border-bottom: 1px solid #e5e5e5; display: flex; align-items: center; padding: 0 20px; justify-content: space-between; }
+        .topbar-left { display: flex; align-items: center; gap: 16px; }
+        .topbar-right { display: flex; align-items: center; gap: 12px; }
+        .back-btn { background: none; border: none; color: #666; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 4px; }
+        .task-title { font-size: 18px; font-weight: 600; }
+        .badge { padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 500; }
+        .badge.running { background: #0066cc; color: white; }
+        .badge.completed { background: #e8f5e9; color: #2e7d32; border: 1px solid #81c784; }
+        .close-btn { padding: 8px 16px; background: white; border: 1px solid #e5e5e5; border-radius: 6px; cursor: pointer; }
+        .close-btn:hover { background: #f5f5f5; }
+        .main-layout { display: grid; grid-template-columns: 1fr 320px; height: calc(100vh - 120px); }
+        .conversation-area { padding: 24px; overflow-y: auto; max-width: 980px; margin: 0 auto; width: 100%; }
+        .message { margin-bottom: 24px; }
+        .message-header { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+        .avatar { width: 32px; height: 32px; border-radius: 50%; background: #e5e5e5; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+        .avatar.user { background: #0066cc; color: white; }
+        .avatar.bot { background: #764ba2; color: white; }
+        .message-bubble { background: white; padding: 16px; border-radius: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.1); }
+        .message.user .message-bubble { background: #f5f5f5; }
+        .tool-call { background: #fef9f3; border-left: 4px solid #ff9800; padding: 12px; margin-top: 12px; border-radius: 6px; font-family: monospace; font-size: 13px; }
+        .tool-call .tool-header { font-weight: 600; margin-bottom: 8px; }
+        .thinking { color: #666; font-style: italic; margin-top: 12px; }
+        .timestamp { font-size: 12px; color: #999; margin-top: 8px; }
+        .input-area { border-top: 1px solid #e5e5e5; background: white; padding: 20px; display: flex; gap: 12px; }
+        .input-area textarea { flex: 1; border: 1px solid #e5e5e5; border-radius: 8px; padding: 12px; resize: none; font-family: inherit; font-size: 14px; }
+        .send-btn { padding: 12px 24px; background: #0066cc; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 500; }
+        .send-btn:hover { background: #0052a3; }
+        .file-panel { background: white; border-left: 1px solid #e5e5e5; padding: 20px; overflow-y: auto; }
+        .file-panel h3 { font-size: 16px; margin-bottom: 16px; }
+        .file-tree { font-size: 14px; }
+        .file-item { padding: 6px 0; display: flex; align-items: center; gap: 8px; }
+        .file-item.folder { font-weight: 500; }
+        .status-dot { width: 8px; height: 8px; border-radius: 50%; }
+        .status-dot.created { background: #4caf50; }
+        .status-dot.modified { background: #2196f3; }
+    </style>
+</head>
+<body>
+    <nav class="global-nav">
+        <a href="index.html" class="logo">SiriusX</a>
+    </nav>
+    <div class="topbar">
+        <div class="topbar-left">
+            <button class="back-btn">← Back</button>
+            <span class="task-title">支付系统架构设计</span>
+        </div>
+        <div class="topbar-right">
+            <span class="badge running">Running</span>
+            <button class="close-btn">Close Task</button>
+        </div>
+    </div>
+    <div class="main-layout">
+        <div class="conversation-area">
+            <div class="message user">
+                <div class="message-header">
+                    <div class="avatar user">👤</div>
+                    <strong>User</strong>
+                </div>
+                <div class="message-bubble">
+                    为支付系统设计架构方案，要求高可用、可扩展
+                </div>
+                <div class="timestamp">14:30</div>
+            </div>
+            <div class="message bot">
+                <div class="message-header">
+                    <div class="avatar bot">🤖</div>
+                    <strong>Architecture Advisor</strong>
+                </div>
+                <div class="message-bubble">
+                    <p>我来帮你设计一个高可用、可扩展的支付系统架构方案。让我先分析一下核心需求...</p>
+                    <div class="tool-call">
+                        <div class="tool-header">🔧 Running bash</div>
+                        <code>$ tree src/</code>
+                        <div style="margin-top:8px;">✓ Completed in 1.2s</div>
+                    </div>
+                    <div class="thinking">💭 Thinking about database sharding strategy...</div>
+                    <p style="margin-top:12px;">基于你的需求，我建议采用以下架构...</p>
+                </div>
+                <div class="timestamp">14:32</div>
+            </div>
+        </div>
+        <div class="file-panel">
+            <h3>📁 Workspace Files (8)</h3>
+            <div class="file-tree">
+                <div class="file-item folder">📂 docs/</div>
+                <div class="file-item" style="padding-left:20px;">
+                    📄 architecture.md
+                    <span class="status-dot created"></span>
+                </div>
+                <div class="file-item" style="padding-left:20px;">
+                    📄 api-design.md
+                    <span class="status-dot modified"></span>
+                </div>
+                <div class="file-item folder">📂 diagrams/</div>
+                <div class="file-item" style="padding-left:20px;">
+                    📄 system-flow.mmd
+                    <span class="status-dot created"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="input-area">
+        <textarea placeholder="Type your message..." rows="3"></textarea>
+        <button class="send-btn">Send →</button>
+    </div>
+</body>
+</html>
