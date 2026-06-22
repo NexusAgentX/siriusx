@@ -12,11 +12,17 @@
 docs/
 ├── ARCHITECTURE.md               # 顶层架构、用户故事、设计原则
 ├── IMPLEMENTATION.md             # 实施计划、性能目标、分阶段路线图
-├── STAGE0_SPEC.md                # 阶段 0 规格细化
-├── STAGE0_AUDIT_REPORT.md        # 阶段 0 架构审计
+├── STAGE0_SPEC.md                # 旧分布式执行规格（legacy）
 ├── UIUX.md                       # UI/UX 设计说明
 ├── schema.sql                    # 数据库 schema
 ├── README.md                     # 本文件
+│
+├── stage/                        # 新阶段路线图（从简单聊天到生产平台）
+│   ├── README.md
+│   ├── STAGE0_SIMPLE_CHAT.md
+│   ├── STAGE1_LOCAL_TOOLS.md
+│   ├── STAGE2_LOCAL_WORKSPACE.md
+│   └── ...
 │
 ├── shared/                       # 跨仓库共用（两仓都需遵循）
 │   ├── 仓库与信任边界.md          # 信任边界拆分原则、跨仓库协议、安全不变量
@@ -61,10 +67,11 @@ docs/
 
 ### 新人上手
 
-1. **了解用户视角** → [ARCHITECTURE.md - 用户故事（通俗版）](./ARCHITECTURE.md#用户故事)
-2. **理解核心设计** → [ARCHITECTURE.md - 核心原则](./ARCHITECTURE.md#核心原则)
-3. **信任边界与两仓拆分** → [shared/仓库与信任边界.md](./shared/仓库与信任边界.md)
-4. **查看实施计划** → [IMPLEMENTATION.md](./IMPLEMENTATION.md)
+1. **查看新阶段路线** → [stage/README.md](./stage/README.md)
+2. **了解用户视角** → [ARCHITECTURE.md - 用户故事（通俗版）](./ARCHITECTURE.md#用户故事)
+3. **理解核心设计** → [ARCHITECTURE.md - 核心原则](./ARCHITECTURE.md#核心原则)
+4. **信任边界与两仓拆分** → [shared/仓库与信任边界.md](./shared/仓库与信任边界.md)
+5. **查看 MVP 实施计划** → [IMPLEMENTATION.md](./IMPLEMENTATION.md)
 
 ### 按仓库阅读
 
@@ -248,7 +255,28 @@ docs/
 
 ---
 
-## 📊 性能目标
+## 🗺 MVP Pyramid
+
+| Stage | 用户得到什么 | 入口 |
+|---:|---|---|
+| 0 | 最小聊天 MVP | [stage/README.md](./stage/README.md) |
+| 1 | 本机工具助手 MVP | [stage/README.md](./stage/README.md) |
+| 2 | 本地工作区 MVP | [stage/README.md](./stage/README.md) |
+| 3 | 可恢复任务 MVP | [stage/README.md](./stage/README.md) |
+| 4 | 个人/小团队产品 MVP | [stage/README.md](./stage/README.md) |
+| 5 | 服务化执行 MVP | [stage/README.md](./stage/README.md) |
+| 6 | 安全执行 MVP | [stage/README.md](./stage/README.md) |
+| 7 | 多节点 SaaS MVP | [stage/README.md](./stage/README.md) |
+| 8 | 生产运营 MVP | [stage/README.md](./stage/README.md) |
+| 9 | 平台生态 MVP | [stage/README.md](./stage/README.md) |
+
+**实施总览** → [IMPLEMENTATION.md](./IMPLEMENTATION.md)
+
+---
+
+## 📊 生产参考指标
+
+Stage 7+ 才需要按下面指标评估：
 
 | 指标 | 目标值 |
 |---|---|
@@ -260,75 +288,21 @@ docs/
 | Sandbox creation success rate | > 95% |
 | Workspace commit success rate | > 99% |
 
-**详细说明** → [IMPLEMENTATION.md - 性能目标](./IMPLEMENTATION.md#性能目标和容量规划)
+**详细说明** → [IMPLEMENTATION.md - Stage 7+ 生产参考指标](./IMPLEMENTATION.md#stage-7-生产参考指标)
 
 ---
 
-## 💰 成本估算
+## 💰 生产参考成本
 
 | 项目 | 月成本 |
 |---|---|
-| EC2（6-12 实例） | $200-400 |
+| Compute / EC2 | $200-400 |
 | RDS Postgres | $100 |
 | ElastiCache Redis | $50 |
-| S3 存储 | $10 |
-| **总计** | **$360-560** |
+| S3 / Object Storage | $10+ |
+| **合计** | **$360-560+** |
 
----
-
-## 🗺 实施路线图
-
-### 阶段 0：基础设施修正
-
-修正架构边界冲突，为多节点部署做准备。**阶段 0 包含仓库信任边界和 Auth，这是安全边界的基础。**
-
-- 🎯 仓库与信任边界
-- 🎯 Auth 和租户边界
-- 🎯 Event runId/sequence 改造
-- 🎯 Task 创建分离 prompt
-- 🎯 Task 锁定 Agent 版本
-- 🎯 Workspace revision 两阶段提交
-- 🎯 Workspace revision 并发控制
-
-### 阶段 1：队列和 Control Worker 扩容
-
-支持 2+ Control Worker 节点并发处理。
-
-- 🎯 Redis Queue 集成
-- 🎯 Run Lease 管理
-- 🎯 Task Summary 异步刷新（后台 job，不阻塞 run）
-- 🎯 前端优化
-
-### 阶段 2：Stateless Sandbox
-
-按需创建 sandbox，简化故障恢复。
-
-- ✅ Stateless Sandbox Provider
-
-### 阶段 3：S3 Workspace 性能优化
-
-S3 Workspace 增量上传、本地缓存、并行传输优化。
-
-### 阶段 4：生产优化（持续）
-
-监控、成本优化、性能调优和灾难恢复。
-
----
-
-## ✅ 最小可行原型
-
-**目标**：2 API + 2 Control Worker + 独立 sandbox runtime，稳定运行 1000+ runs
-
-**验证点**：
-
-1. Auth 租户隔离和权限边界
-2. Control Worker 崩溃恢复
-3. API 节点重启恢复
-4. Workspace 连续性
-5. Event 持久化降级
-6. Workspace 冲突检测
-
-**详细说明** → [IMPLEMENTATION.md - 最小可行原型验证](./IMPLEMENTATION.md#最小可行原型验证)
+这不是 Stage 0 的成本模型。
 
 ---
 

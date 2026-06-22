@@ -1,14 +1,37 @@
-# SiriusX Stage 0 执行规格
+# Legacy：SiriusX 分布式执行规格
 
-> 阶段 0 的唯一执行入口。凡阶段 0 实施与旧文档冲突，以本文为准。旧文档只作为背景材料或后续阶段参考。
+> 这是旧路线中的 Stage 0 规格，定位是“分布式 SaaS 执行地基”。它不再代表新的 MVP pyramid Stage 0。
+
+新的 Stage 0 是 [最小聊天 MVP](./stage/STAGE0_SIMPLE_CHAT.md)：一个能运行、能流式回复、能给用户即时价值的最小聊天产品。
+
+当前实施应以 [MVP Pyramid](./stage/README.md) 和 [IMPLEMENTATION.md](./IMPLEMENTATION.md) 为准。本文件保留为 Stage 5-7 的分布式执行参考：API/Worker 拆分、共享存储、队列、租约、沙箱运行时和多节点恢复。
 
 ---
 
-## 1. 范围
+## 0. Legacy 定位
 
-阶段 0 目标是把 SiriusX 的 SaaS 执行地基收敛成可运行、可恢复、可测试的最小生产边界。它不是完整产品阶段，也不实现阶段 1+ 的性能优化和企业能力。
+本文件描述的是旧阶段体系中的“先搭完整分布式地基”方案。这个方案在技术上仍有参考价值，但不适合作为产品起步阶段。
 
-### 1.1 阶段 0 包含
+新旧阶段映射：
+
+| 本文件能力 | 新 MVP pyramid 对应阶段 |
+|---|---:|
+| Auth、租户隔离、Agent Catalog | Stage 4 / Stage 7 |
+| Redis Queue、ResultBus、API/Worker 拆分 | Stage 5 |
+| S3 Workspace、artifact 大对象存储 | Stage 5 |
+| Sandbox Runtime、capability token | Stage 6 |
+| Run lease、LeaseSweeper、多 Worker 恢复 | Stage 7 |
+| 监控、审计、部署运维 | Stage 8 |
+
+如果本文内容与 `docs/stage/` 下的新阶段文档冲突，实施时以后者为准。
+
+---
+
+## 1. 旧范围
+
+旧阶段 0 的目标是把 SiriusX 的 SaaS 执行地基收敛成可运行、可恢复、可测试的最小生产边界。它不是新的 MVP pyramid Stage 0，也不代表当前起步阶段。
+
+### 1.1 旧阶段 0 包含
 
 - Auth、租户隔离、CSRF、审计 actor 统一。
 - 可执行 schema/migration 作为数据库唯一契约。
@@ -26,7 +49,7 @@
 - Artifact/file API。
 - dev profile 和 distributed profile 验收。
 
-### 1.2 阶段 0 不包含
+### 1.2 旧阶段 0 不包含
 
 - 同一 Task 的 per-task run queue。
 - S3 event backup 或“不丢事件”承诺。
