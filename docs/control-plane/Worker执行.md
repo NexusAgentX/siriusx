@@ -296,6 +296,6 @@ async function handleRunFailure(run: TaskRun, error: Error) {
 
 ## 相关文档
 
-- [数据模型](./数据模型.md) - TaskRun 状态定义
+- [数据模型](../shared/数据模型.md) - TaskRun 状态定义
 - [队列和租约](./队列与租约.md) - LeaseSweeper 重入队策略
 - [事件持久化](./事件持久化.md) - 内存缓冲和恢复限制

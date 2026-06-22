@@ -6,34 +6,54 @@
 
 ## 📚 文档结构
 
+文档按仓库信任边界划分为三层：跨仓库共用文档、可信控制面模块、一次性沙箱运行时模块。
+
 ```
-docs/SiriusX/
-├── ARCHITECTURE.md           # 顶层架构、用户故事、设计原则
-├── IMPLEMENTATION.md          # 实施计划、性能目标、分阶段路线图
-├── README.md                  # 本文件
-└── modules/                   # 模块详细设计
-    ├── 仓库与信任边界.md
-    ├── 数据模型.md
-    ├── 存储模块.md
-    ├── 任务生命周期.md
-    ├── 队列与租约.md
-    ├── Worker执行.md
-    ├── PiSDK运行器.md
-    ├── 工作区提供器.md
-    ├── 沙箱管理.md
-    ├── 事件持久化.md
-    ├── 恢复与查询.md
-    ├── 前端优化.md
-    ├── 上下文优化.md
-    ├── 产物与文件树优化.md
-    ├── 短生命周期会话.md
-    ├── API端点.md
-    ├── Auth实现详解.md
-    ├── 部署运维手册.md
-    ├── 测试场景清单.md
-    ├── 失败场景.md
-    └── 错误码规范.md
+docs/
+├── ARCHITECTURE.md               # 顶层架构、用户故事、设计原则
+├── IMPLEMENTATION.md             # 实施计划、性能目标、分阶段路线图
+├── STAGE0_SPEC.md                # 阶段 0 规格细化
+├── STAGE0_AUDIT_REPORT.md        # 阶段 0 架构审计
+├── UIUX.md                       # UI/UX 设计说明
+├── schema.sql                    # 数据库 schema
+├── README.md                     # 本文件
+│
+├── shared/                       # 跨仓库共用（两仓都需遵循）
+│   ├── 仓库与信任边界.md          # 信任边界拆分原则、跨仓库协议、安全不变量
+│   ├── 数据模型.md                # Task / Run / Event / Artifact 核心数据结构
+│   ├── 错误码规范.md              # 统一错误响应与提示
+│   ├── 测试场景清单.md            # 测试金字塔与用例
+│   ├── 失败场景.md                # 崩溃、lease 过期、冲突等故障模型
+│   └── 部署运维手册.md            # 环境变量、监控、故障排查
+│
+├── control-plane/                # siriusx-control-plane（可信）
+│   ├── API端点.md
+│   ├── Auth实现详解.md
+│   ├── 任务生命周期.md
+│   ├── 队列与租约.md
+│   ├── Worker执行.md
+│   ├── 事件持久化.md
+│   ├── 恢复与查询.md
+│   ├── 存储模块.md
+│   ├── 工作区提供器.md
+│   ├── 上下文优化.md
+│   ├── 产物与文件树优化.md
+│   ├── 短生命周期会话.md
+│   └── 前端优化.md
+│
+├── sandbox-runtime/              # siriusx-sandbox-runtime（一次性不可信）
+│   ├── PiSDK运行器.md
+│   └── 沙箱管理.md
+│
+└── uiux-preview/                 # 静态 UI 预览（HTML）
 ```
+
+生产形态的两个仓库与目录对应关系：
+
+| 仓库 | 信任级别 | 对应目录 |
+|---|---|---|
+| [`siriusx-control-plane`](https://github.com/NexusAgentX/siriusx-control-plane) | 可信 | `docs/control-plane/` + `docs/shared/` 中的控制面侧契约 |
+| [`siriusx-sandbox-runtime`](https://github.com/NexusAgentX/siriusx-sandbox-runtime) | 不可信/一次性 | `docs/sandbox-runtime/` + `docs/shared/` 中的沙箱侧契约 |
 
 ---
 
@@ -43,29 +63,62 @@ docs/SiriusX/
 
 1. **了解用户视角** → [ARCHITECTURE.md - 用户故事（通俗版）](./ARCHITECTURE.md#用户故事)
 2. **理解核心设计** → [ARCHITECTURE.md - 核心原则](./ARCHITECTURE.md#核心原则)
-3. **查看实施计划** → [IMPLEMENTATION.md](./IMPLEMENTATION.md)
+3. **信任边界与两仓拆分** → [shared/仓库与信任边界.md](./shared/仓库与信任边界.md)
+4. **查看实施计划** → [IMPLEMENTATION.md](./IMPLEMENTATION.md)
 
-### 工程师视角
+### 按仓库阅读
 
-1. **系统拓扑** → [ARCHITECTURE.md - 分布式拓扑](./ARCHITECTURE.md#分布式拓扑)
-2. **仓库与信任边界** → [仓库与信任边界.md](./modules/仓库与信任边界.md)
-3. **数据模型** → [数据模型.md](./modules/数据模型.md)
-4. **存储设计** → [存储模块.md](./modules/存储模块.md)
-5. **队列和调度** → [队列与租约.md](./modules/队列与租约.md)
+#### `siriusx-control-plane`（可信控制面）
 
-### 前端开发者
+1. [API 端点](./control-plane/API端点.md)
+2. [Auth 实现详解](./control-plane/Auth实现详解.md)
+3. [任务生命周期](./control-plane/任务生命周期.md) — TaskStore
+4. [队列与租约](./control-plane/队列与租约.md) — 分布式调度
+5. [Control Worker 执行](./control-plane/Worker执行.md) — RunOrchestrator
+6. [事件持久化](./control-plane/事件持久化.md) — Postgres 事实来源
+7. [恢复与查询](./control-plane/恢复与查询.md) — 断线恢复
+8. [存储模块](./control-plane/存储模块.md) — Postgres + S3 边界
+9. [工作区提供器](./control-plane/工作区提供器.md) — S3 Workspace
+10. [上下文优化](./control-plane/上下文优化.md) — Task Summary
+11. [产物与文件树优化](./control-plane/产物与文件树优化.md)
+12. [短生命周期会话](./control-plane/短生命周期会话.md)
+13. [前端优化](./control-plane/前端优化.md)
 
-1. **API 端点** → [API端点.md](./modules/API端点.md)
-2. **断线恢复** → [恢复与查询.md](./modules/恢复与查询.md)
-3. **轮询优化** → [前端优化.md](./modules/前端优化.md)
-4. **产物展示** → [产物与文件树优化.md](./modules/产物与文件树优化.md)
+#### `siriusx-sandbox-runtime`（一次性沙箱）
 
-### 后端开发者
+1. [Pi SDK 运行器](./sandbox-runtime/PiSDK运行器.md)
+2. [沙箱管理](./sandbox-runtime/沙箱管理.md)
 
-1. **Control Worker 执行** → [Worker执行.md](./modules/Worker执行.md)
-2. **Pi SDK 集成** → [PiSDK运行器.md](./modules/PiSDK运行器.md)
-3. **Sandbox 管理** → [沙箱管理.md](./modules/沙箱管理.md)
-4. **事件持久化** → [事件持久化.md](./modules/事件持久化.md)
+#### 共用契约与规范
+
+1. [仓库与信任边界](./shared/仓库与信任边界.md) — 跨仓库协议（RunSpec / SandboxEvent）
+2. [数据模型](./shared/数据模型.md)
+3. [错误码规范](./shared/错误码规范.md)
+4. [测试场景清单](./shared/测试场景清单.md)
+5. [失败场景](./shared/失败场景.md)
+6. [部署运维手册](./shared/部署运维手册.md)
+
+### 按角色
+
+**前端开发者**
+
+1. [API 端点](./control-plane/API端点.md)
+2. [断线恢复](./control-plane/恢复与查询.md)
+3. [轮询优化](./control-plane/前端优化.md)
+4. [产物展示](./control-plane/产物与文件树优化.md)
+
+**后端开发者（控制面）**
+
+1. [Control Worker 执行](./control-plane/Worker执行.md)
+2. [事件持久化](./control-plane/事件持久化.md)
+3. [队列与租约](./control-plane/队列与租约.md)
+4. [存储模块](./control-plane/存储模块.md)
+
+**沙箱运行时开发者**
+
+1. [Pi SDK 运行器](./sandbox-runtime/PiSDK运行器.md)
+2. [沙箱管理](./sandbox-runtime/沙箱管理.md)
+3. [仓库与信任边界](./shared/仓库与信任边界.md) — 跨仓库协议契约
 
 ---
 
@@ -113,7 +166,7 @@ docs/SiriusX/
 
 **方案**：拆成 `siriusx-control-plane` 和 `siriusx-sandbox-runtime` 两个仓库，通过 `RunSpec` / `SandboxEvent` 协议通信。
 
-**详细说明** → [仓库与信任边界.md](./modules/仓库与信任边界.md)
+**详细说明** → [shared/仓库与信任边界.md](./shared/仓库与信任边界.md)
 
 ---
 
@@ -123,7 +176,7 @@ docs/SiriusX/
 
 **方案**：每次执行创建新 session，从数据库恢复上下文。
 
-**详细说明** → [短生命周期会话.md](./modules/短生命周期会话.md)
+**详细说明** → [control-plane/短生命周期会话.md](./control-plane/短生命周期会话.md)
 
 ---
 
@@ -133,7 +186,7 @@ docs/SiriusX/
 
 **方案**：两阶段提交 + 状态机（pending → uploading → committed）。
 
-**详细说明** → [存储模块.md](./modules/存储模块.md)
+**详细说明** → [control-plane/存储模块.md](./control-plane/存储模块.md)
 
 ---
 
@@ -143,7 +196,7 @@ docs/SiriusX/
 
 **方案**：每次 run 创建新 sandbox，用完即销毁（开销 < 2%）。
 
-**详细说明** → [沙箱管理.md](./modules/沙箱管理.md)
+**详细说明** → [sandbox-runtime/沙箱管理.md](./sandbox-runtime/沙箱管理.md)
 
 ---
 
@@ -153,7 +206,7 @@ docs/SiriusX/
 
 **方案**：每个 run 独立的 sequence（从 1 开始）。
 
-**详细说明** → [事件持久化.md](./modules/事件持久化.md)
+**详细说明** → [control-plane/事件持久化.md](./control-plane/事件持久化.md)
 
 ---
 
@@ -163,15 +216,15 @@ docs/SiriusX/
 
 **方案**：定期刷新 summary（10 runs / 30k tokens / 50 files）。
 
-**详细说明** → [上下文优化.md](./modules/上下文优化.md)
+**详细说明** → [control-plane/上下文优化.md](./control-plane/上下文优化.md)
 
 ---
 
 ## 🛠 技术栈
 
-### 后端
+### 后端（控制面）
 
-- **控制面运行时**：Bun + NestJS
+- **运行时**：Bun + NestJS
 - **数据库**：Postgres（RDS）
 - **缓存/队列**：Redis（ElastiCache）
 - **存储**：S3
@@ -229,7 +282,6 @@ docs/SiriusX/
 
 修正架构边界冲突，为多节点部署做准备。**阶段 0 包含仓库信任边界和 Auth，这是安全边界的基础。**
 
-**目标清单**：
 - 🎯 仓库与信任边界
 - 🎯 Auth 和租户边界
 - 🎯 Event runId/sequence 改造
@@ -242,7 +294,6 @@ docs/SiriusX/
 
 支持 2+ Control Worker 节点并发处理。
 
-**目标清单**：
 - 🎯 Redis Queue 集成
 - 🎯 Run Lease 管理
 - 🎯 Task Summary 异步刷新（后台 job，不阻塞 run）
@@ -258,12 +309,9 @@ docs/SiriusX/
 
 S3 Workspace 增量上传、本地缓存、并行传输优化。
 
-**注意**：S3 Workspace 基础实现已在阶段 0 完成，本阶段专注于性能优化。
-
 ### 阶段 4：生产优化（持续）
 
 监控、成本优化、性能调优和灾难恢复。
-
 
 ---
 
@@ -272,6 +320,7 @@ S3 Workspace 增量上传、本地缓存、并行传输优化。
 **目标**：2 API + 2 Control Worker + 独立 sandbox runtime，稳定运行 1000+ runs
 
 **验证点**：
+
 1. Auth 租户隔离和权限边界
 2. Control Worker 崩溃恢复
 3. API 节点重启恢复
@@ -288,7 +337,7 @@ S3 Workspace 增量上传、本地缓存、并行传输优化。
 ### 更新原则
 
 1. **架构变更**：更新 ARCHITECTURE.md 和相关模块文档
-2. **新增模块**：在 modules/ 下创建新文档，更新本 README
+2. **新增模块**：按所属仓库放入 `control-plane/` 或 `sandbox-runtime/`，跨仓契约放入 `shared/`，并更新本 README
 3. **实施进度**：更新 IMPLEMENTATION.md 的 checkbox
 4. **保持同步**：代码实现后及时更新文档
 
@@ -298,19 +347,5 @@ S3 Workspace 增量上传、本地缓存、并行传输优化。
 - 每月进行一次文档一致性审查
 
 ---
-
-## 🔗 相关文档
-
-- [根目录 AGENTS.md](../AGENTS.md) - 开发者上手指南
-- [ARCHITECTURE.md](./ARCHITECTURE.md) - 平台架构
-
----
-
-## 💬 反馈和贡献
-
-如发现文档错误或有改进建议，请：
-
-1. 提交 Issue 说明问题
-2. 或直接提交 PR 修复
 
 文档是活的，随着系统演进持续更新。

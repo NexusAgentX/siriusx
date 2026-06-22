@@ -225,7 +225,7 @@ class EventPersistenceService {
 **目标**：支持多 Control Worker 节点无状态访问 workspace
 
 **🚨 为什么必须在阶段 0**：
-- 多 Control Worker 节点不能依赖本地磁盘（参见 [工作区提供器.md](./modules/工作区提供器.md)）
+- 多 Control Worker 节点不能依赖本地磁盘（参见 [工作区提供器.md](./control-plane/工作区提供器.md)）
 - 阶段 1 要求 2+ Control Worker 并发处理，必须先有共享存储
 - 本地 workspace 只能用于单节点开发环境
 
@@ -517,4 +517,6 @@ async function testConcurrentTasks() {
 ### 内部文档
 
 - [架构概览](./ARCHITECTURE.md)
-- [模块详细设计](./modules/)
+- [共享设计](./shared/) - 数据模型、错误码、测试、部署运维等跨仓库文档
+- [控制面模块](./control-plane/) - API、Auth、Task 生命周期、队列、Worker、存储等
+- [沙箱运行时模块](./sandbox-runtime/) - Pi SDK、沙箱管理

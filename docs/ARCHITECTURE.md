@@ -223,7 +223,7 @@ SiriusX 拆成两个主要仓库：
 | `siriusx-control-plane` | 可信 | Web/API、Auth、tenant、TaskStore、Queue、lease、审计、人工审批、凭证代理、workspace revision 指针 |
 | `siriusx-sandbox-runtime` | 不可信/一次性 | Pi AgentSession、shell、解释器、浏览器、临时文件系统、容器/MicroVM 适配、资源限制、事件上报和销毁 |
 
-控制面不能执行不可信 shell、解释器或浏览器；沙箱运行时不能持有长期密钥、直接做最终权限判断或直接推进 Task 状态。两者通过版本化协议通信：控制面发送 `RunSpec`，沙箱运行时回传 `SandboxEvent`、`ArtifactManifest` 和 `WorkspaceCommitProposal`。详细契约见 [仓库与信任边界](./modules/仓库与信任边界.md)。
+控制面不能执行不可信 shell、解释器或浏览器；沙箱运行时不能持有长期密钥、直接做最终权限判断或直接推进 Task 状态。两者通过版本化协议通信：控制面发送 `RunSpec`，沙箱运行时回传 `SandboxEvent`、`ArtifactManifest` 和 `WorkspaceCommitProposal`。详细契约见 [仓库与信任边界](./shared/仓库与信任边界.md)。
 
 ---
 
@@ -343,11 +343,13 @@ Sandbox-runtime repo: siriusx-sandbox-runtime
 
 ## 短生命周期会话设计
 
-详细解释 → 参见 [短生命周期会话](./modules/短生命周期会话.md)
+详细解释 → 参见 [短生命周期会话](./control-plane/短生命周期会话.md)
 
 ---
 
 ## 相关文档
 
 - [实施计划](./IMPLEMENTATION.md) - 性能目标、容量规划、分阶段路线图
-- [模块详细设计](./modules/) - 各子系统的详细技术规格
+- [共享设计](./shared/) - 数据模型、错误码、测试、部署运维等跨仓库文档
+- [控制面模块](./control-plane/) - API、Auth、Task 生命周期、队列、Worker、存储、事件持久化等
+- [沙箱运行时模块](./sandbox-runtime/) - Pi SDK 运行器、沙箱管理

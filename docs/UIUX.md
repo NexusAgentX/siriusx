@@ -1297,9 +1297,9 @@ const FilePreviewDrawer = lazy(() => import('@/components/FilePreviewDrawer'));
 
 - [ARCHITECTURE.md](./ARCHITECTURE.md) - 系统架构和核心原则
 - [IMPLEMENTATION.md](./IMPLEMENTATION.md) - 实施计划和性能目标
-- [API端点.md](./modules/API端点.md) - 完整 API 规范
-- [前端优化.md](./modules/前端优化.md) - 前端性能优化策略
-- [Auth实现详解.md](./modules/Auth实现详解.md) - 认证和授权设计
+- [API端点.md](./control-plane/API端点.md) - 完整 API 规范
+- [前端优化.md](./control-plane/前端优化.md) - 前端性能优化策略
+- [Auth实现详解.md](./control-plane/Auth实现详解.md) - 认证和授权设计
 
 ---
 

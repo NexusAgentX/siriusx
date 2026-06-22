@@ -1203,15 +1203,15 @@ Artifact index 存在 Postgres，文件内容存在 workspace/object storage。
 
 ### 14.1 必须改
 
-- `modules/Worker执行.md`：删除“run-002 进入队列等待”示例，改为 active run 时 `409 RUN_CONFLICT`。
-- `modules/PiSDK运行器.md`：把 `task_error` 改为 `error`。
-- `modules/事件持久化.md`：删除流程图中的 `S3 Backup` 阶段 0 暗示，明确 PG-only 恢复。
-- `modules/存储模块.md`：把 `workspace_ref 阶段 3+` 改为阶段 0 契约，并说明 local/S3 双轨。
+- `control-plane/Worker执行.md`：删除“run-002 进入队列等待”示例，改为 active run 时 `409 RUN_CONFLICT`。
+- `sandbox-runtime/PiSDK运行器.md`：把 `task_error` 改为 `error`。
+- `control-plane/事件持久化.md`：删除流程图中的 `S3 Backup` 阶段 0 暗示，明确 PG-only 恢复。
+- `control-plane/存储模块.md`：把 `workspace_ref 阶段 3+` 改为阶段 0 契约，并说明 local/S3 双轨。
 - `schema.sql`：修复循环外键，补齐 actor type、summary 字段、可执行初始化。
-- `modules/Auth实现详解.md`：补齐 `/api/auth/csrf`，register/login 返回 `csrfToken`，统一 actor type。
+- `control-plane/Auth实现详解.md`：补齐 `/api/auth/csrf`，register/login 返回 `csrfToken`，统一 actor type。
 - `UIUX.md`：`POST /message` body 改为 `prompt`，删除 `sessionStorage` 首条 prompt 中转流程。
-- `modules/上下文优化.md`：字段名 `content` 改为 `summary`，刷新策略改为每 run 后异步、不阻塞。
-- `modules/API端点.md`：补齐 `GET /artifacts`、`GET /files/content?path=`、`RUN_ACTIVE`、409 状态冲突。
+- `control-plane/上下文优化.md`：字段名 `content` 改为 `summary`，刷新策略改为每 run 后异步、不阻塞。
+- `control-plane/API端点.md`：补齐 `GET /artifacts`、`GET /files/content?path=`、`RUN_ACTIVE`、409 状态冲突。
 
 ### 14.2 标记为 future/backlog
 
